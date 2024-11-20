@@ -97,6 +97,7 @@ def lock_user(stdscr, user):
     else:
         stdscr.addstr(f"Error locking user '{user}': {result.stderr}\n", curses.color_pair(3))
     stdscr.refresh()
+    stdscr.getch()  # Wait for user input before continuing
 
 # Unlock user function
 def unlock_user(stdscr, user):
