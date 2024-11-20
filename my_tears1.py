@@ -90,26 +90,23 @@ def delete_user(stdscr, user):
 
 
 def lock_user(stdscr, user):
-    stdscr.clear()
     result = subprocess.run(['sudo', 'usermod', '-L', user], capture_output=True, text=True)
+    stdscr.clear()
     if result.returncode == 0:
-        stdscr.addstr(f"User '{user}' locked.\n", curses.color_pair(4))  # Success color
+        stdscr.addstr(f"User '{user}' locked.\n", curses.color_pair(4))
     else:
-        stdscr.addstr(f"Error locking user '{user}': {result.stderr}\n", curses.color_pair(3))  # Error color
+        stdscr.addstr(f"Error locking user '{user}': {result.stderr}\n", curses.color_pair(3))
     stdscr.refresh()
-    curses.noecho()
-    stdscr.getch()
+
 
 def unlock_user(stdscr, user):
+    result = subprocess.run(['usermod', '-U', user], capture_output=True, text=True)
     stdscr.clear()
-    result = subprocess.run(['sudo', 'usermod', '-U', user], capture_output=True, text=True)
     if result.returncode == 0:
-        stdscr.addstr(f"User '{user}' unlocked.\n", curses.color_pair(4))  # Success color
+        stdscr.addstr(f"User '{user}' unlocked.\n", curses.color_pair(4))
     else:
-        stdscr.addstr(f"Error unlocking user '{user}': {result.stderr}\n", curses.color_pair(3))  # Error color
+        stdscr.addstr(f"Error unlocking user '{user}': {result.stderr}\n", curses.color_pair(3))
     stdscr.refresh()
-    curses.noecho()
-    stdscr.getch()
 
 def main(stdscr):
     curses.curs_set(0)
