@@ -93,16 +93,17 @@ def lock_user(stdscr, user):
     result = subprocess.run(['usermod', '-L', user], capture_output=True, text=True)
     stdscr.clear()
     if result.returncode == 0:
-        stdscr.addstr(f"User '{user}' locked.\n", curses.color_pair(4))
+        stdscr.addstr(f"User '{user}' locked successfully.\n", curses.color_pair(4))
     else:
         stdscr.addstr(f"Error locking user '{user}': {result.stderr}\n", curses.color_pair(3))
     stdscr.refresh()
 
+# Unlock user function
 def unlock_user(stdscr, user):
     result = subprocess.run(['usermod', '-U', user], capture_output=True, text=True)
     stdscr.clear()
     if result.returncode == 0:
-        stdscr.addstr(f"User '{user}' unlocked.\n", curses.color_pair(4))
+        stdscr.addstr(f"User '{user}' unlocked successfully.\n", curses.color_pair(4))
     else:
         stdscr.addstr(f"Error unlocking user '{user}': {result.stderr}\n", curses.color_pair(3))
     stdscr.refresh()
