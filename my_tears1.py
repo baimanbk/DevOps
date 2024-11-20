@@ -45,15 +45,26 @@ def add_user(stdscr):
     stdscr.refresh()
     curses.echo()
     username = stdscr.getstr().decode('utf-8')
-    try:
-        result = subprocess.run(['sudo', 'useradd', username], capture_output=True, text=True)
-        if result.returncode == 0:
-            stdscr.addstr(f"Successfully added user '{username}'!\n", curses.color_pair(2))
-        else:
-            stdscr.addstr(f"Error adding user '{username}': {result.stderr}\n", curses.color_pair(3))
-    except Exception as e:
-        stdscr.addstr(f"Exception occurred: {str(e)}\n", curses.color_pair(3))
+
+    # Check if the user already exists
+    with open('/etc/passwd', 'r') as f:
+        users = [line.split(':')[0] for line in f.readlines()]
+        if username in users:
+            stdscr.addstr(f"Error: User '{username}' already exists.\n", curses.color_pair(3))  # Error color
+            stdscr.refresh()
+            curses.noecho()
+            return
+
+    # Run the useradd command
+    result = os.system(f"useradd {username}")
+
+    # Check the result of the command
+    if result == 0:
+        stdscr.addstr(f"Successfully added user '{username}'!\n", curses.color_pair(2))  # Success color
+    else:
+        stdscr.addstr(f"Error adding user '{username}'. Please check permissions or system logs.\n", curses.color_pair(3))  # Error color
     stdscr.refresh()
+    curses.noecho()
 
 def delete_user(stdscr, user):
     stdscr.addstr(f"Are you sure you want to delete user '{user}'? (y/n): ")
