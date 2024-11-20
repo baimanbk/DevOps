@@ -41,6 +41,7 @@ def display_users(stdscr, users, page, selected_user, page_size=5):
     return total_pages, current_page_users
 
 def add_user(stdscr):
+    stdscr.clear()
     stdscr.addstr("Enter new username: ")
     stdscr.refresh()
     curses.echo()
@@ -53,49 +54,62 @@ def add_user(stdscr):
             stdscr.addstr(f"Error: User '{username}' already exists.\n", curses.color_pair(3))  # Error color
             stdscr.refresh()
             curses.noecho()
+            stdscr.getch()
             return
 
     # Run the useradd command
     result = os.system(f"useradd {username}")
 
     # Check the result of the command
+    stdscr.clear()
     if result == 0:
         stdscr.addstr(f"Successfully added user '{username}'!\n", curses.color_pair(2))  # Success color
     else:
         stdscr.addstr(f"Error adding user '{username}'. Please check permissions or system logs.\n", curses.color_pair(3))  # Error color
     stdscr.refresh()
     curses.noecho()
+    stdscr.getch()
 
 def delete_user(stdscr, user):
+    stdscr.clear()
     stdscr.addstr(f"Are you sure you want to delete user '{user}'? (y/n): ")
     stdscr.refresh()
     curses.echo()
     confirm = stdscr.getstr().decode('utf-8').lower()
     if confirm == 'y':
         result = subprocess.run(['sudo', 'userdel', user], capture_output=True, text=True)
+        stdscr.clear()
         if result.returncode == 0:
-            stdscr.addstr(f"Successfully deleted user '{user}'!\n", curses.color_pair(3))
+            stdscr.addstr(f"Successfully deleted user '{user}'!\n", curses.color_pair(2))  # Success color
         else:
-            stdscr.addstr(f"Error deleting user '{user}': {result.stderr}\n", curses.color_pair(3))
+            stdscr.addstr(f"Error deleting user '{user}': {result.stderr}\n", curses.color_pair(3))  # Error color
     else:
         stdscr.addstr("Deletion cancelled.\n", curses.color_pair(1))
     stdscr.refresh()
+    curses.noecho()
+    stdscr.getch()
 
 def lock_user(stdscr, user):
+    stdscr.clear()
     result = subprocess.run(['sudo', 'usermod', '-L', user], capture_output=True, text=True)
     if result.returncode == 0:
-        stdscr.addstr(f"User '{user}' locked.\n", curses.color_pair(4))
+        stdscr.addstr(f"User '{user}' locked.\n", curses.color_pair(4))  # Success color
     else:
-        stdscr.addstr(f"Error locking user '{user}': {result.stderr}\n", curses.color_pair(3))
+        stdscr.addstr(f"Error locking user '{user}': {result.stderr}\n", curses.color_pair(3))  # Error color
     stdscr.refresh()
+    curses.noecho()
+    stdscr.getch()
 
 def unlock_user(stdscr, user):
+    stdscr.clear()
     result = subprocess.run(['sudo', 'usermod', '-U', user], capture_output=True, text=True)
     if result.returncode == 0:
-        stdscr.addstr(f"User '{user}' unlocked.\n", curses.color_pair(4))
+        stdscr.addstr(f"User '{user}' unlocked.\n", curses.color_pair(4))  # Success color
     else:
-        stdscr.addstr(f"Error unlocking user '{user}': {result.stderr}\n", curses.color_pair(3))
+        stdscr.addstr(f"Error unlocking user '{user}': {result.stderr}\n", curses.color_pair(3))  # Error color
     stdscr.refresh()
+    curses.noecho()
+    stdscr.getch()
 
 def main(stdscr):
     curses.curs_set(0)
