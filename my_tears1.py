@@ -90,14 +90,13 @@ def delete_user(stdscr, user):
 
 
 def lock_user(stdscr, user):
-    result = subprocess.run(['sudo', 'usermod', '-L', user], capture_output=True, text=True)
+    result = subprocess.run(['usermod', '-L', user], capture_output=True, text=True)
     stdscr.clear()
     if result.returncode == 0:
         stdscr.addstr(f"User '{user}' locked.\n", curses.color_pair(4))
     else:
         stdscr.addstr(f"Error locking user '{user}': {result.stderr}\n", curses.color_pair(3))
     stdscr.refresh()
-
 
 def unlock_user(stdscr, user):
     result = subprocess.run(['usermod', '-U', user], capture_output=True, text=True)
