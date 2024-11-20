@@ -71,13 +71,12 @@ def add_user(stdscr):
     stdscr.getch()
 
 def delete_user(stdscr, user):
-    stdscr.clear()
     stdscr.addstr(f"Are you sure you want to delete user '{user}'? (y/n): ")
     stdscr.refresh()
     curses.echo()
     confirm = stdscr.getstr().decode('utf-8').lower()
     if confirm == 'y':
-        result = subprocess.run(['sudo', 'userdel', user], capture_output=True, text=True)
+        result = subprocess.run(['userdel', user], capture_output=True, text=True)
         stdscr.clear()
         if result.returncode == 0:
             stdscr.addstr(f"Successfully deleted user '{user}'!\n", curses.color_pair(2))  # Success color
@@ -88,6 +87,7 @@ def delete_user(stdscr, user):
     stdscr.refresh()
     curses.noecho()
     stdscr.getch()
+
 
 def lock_user(stdscr, user):
     stdscr.clear()
